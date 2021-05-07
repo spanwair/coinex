@@ -1,4 +1,4 @@
-const coinsUsdt = {
+export const coinsUsdt = {
   a1: { name: 'XLMUSDT', amount: 6 },
   a2: { name: 'XRPUSDT', amount: 3 },
   a3: { name: 'DOGEUSDT', amount: 7 },
@@ -22,7 +22,7 @@ export const takerFee = 0.002; // 0.2%
 // we have accommodate this variable in count !! And if its more profitable smaller/bigger
 export const tradesTurn = 1.2 // double its bigger than trade +- any over 1.2 e.g. is bigger
 const choosedCoin = `a${index}`;
-export const cetUsdt = coinsUsdt[choosedCoin].name; // what pare
-export const minAmount = coinsUsdt[choosedCoin].amount; // min amount totrade
+// export const cetUsdt = coinsUsdt[choosedCoin].name; // what pare
+// export const minAmount = coinsUsdt[choosedCoin].amount; // min amount totrade
 export const changePercent = 0.007; // 0.7%
 // END CONFIG

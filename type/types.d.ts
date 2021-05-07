@@ -37,18 +37,15 @@ declare interface OrderResponse {
 }
 
 declare interface Ticker {
-  date: 1620248202925,
-  ticker: {
-    vol: '40088507.87255443',
-    low: '0.061500',
-    open: '0.062245',
-    high: '0.077000',
-    last: '0.076991',
-    buy: '0.076991',
-    buy_amount: '19590.81253105',
-    sell: '0.077000',
-    sell_amount: '99438.99421605'
-  }
+  vol: '40088507.87255443',
+  low: '0.061500',
+  open: '0.062245',
+  high: '0.077000',
+  last: '0.076991',
+  buy: '0.076991',
+  buy_amount: '19590.81253105',
+  sell: '0.077000',
+  sell_amount: '99438.99421605'
 }
 
 interface FileTicker {

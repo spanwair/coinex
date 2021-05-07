@@ -1,5 +1,4 @@
-import { promises } from 'fs';
-import { cetUsdt, makerFee, takerFee, tradesTurn } from './config';
+import { makerFee, takerFee, tradesTurn } from './config';
 import { fileWrite } from './testingUtils';
 import { buy, defaultDataFileBuy, defaultDataFileSell, sell } from './utils';
 
@@ -9,16 +8,16 @@ export async function onSell(
   changePercent: number,
   market: string,
 ) {
-  const last = Number(resultTicker.ticker.last);
+  const last = Number(resultTicker.last);
   const increasedRound = dataReadFile.round * tradesTurn;
   console.log('netPrice, myPrice :>> ', last, dataReadFile.price);
-  console.log('change :>> ', cetUsdt, (((last-dataReadFile.price)/dataReadFile.price)*100).toFixed(5));
+  console.log('change :>> ', market, (((last-dataReadFile.price)/dataReadFile.price)*100).toFixed(5));
   if (last > (dataReadFile.price + (last * changePercent))) {
     await sell({
       amount: String(dataReadFile.amount),
       market,
     });
-    await fileWrite(`${cetUsdt}-storage.json`, {
+    await fileWrite(`${market}-storage.json`, {
       ...defaultDataFileBuy,
       price: Number(last),
       profit: dataReadFile.profit + (() => {
@@ -29,7 +28,7 @@ export async function onSell(
       max_rounds: dataReadFile.max_rounds,
       max_spend: dataReadFile.max_spend,
     });
-    console.log('sell onSell :>> ', dataReadFile.amount, resultTicker.ticker.last);
+    console.log('sell onSell :>> ', dataReadFile.amount, resultTicker.last);
   } else if (last < (dataReadFile.price - (last * changePercent))) {
     const upBuyAmount = dataReadFile.amount * increasedRound;
     const spend = dataReadFile.spend + (upBuyAmount * last);
@@ -37,7 +36,7 @@ export async function onSell(
       amount: String(upBuyAmount),
       market,
     });
-    await fileWrite(`${cetUsdt}-storage.json`, {
+    await fileWrite(`${market}-storage.json`, {
       ...defaultDataFileSell,
       price: Number(last),
       round: increasedRound,
@@ -47,6 +46,6 @@ export async function onSell(
       max_rounds: dataReadFile.max_rounds < increasedRound ? increasedRound : dataReadFile.max_rounds,
       max_spend: dataReadFile.max_spend < spend ? spend : dataReadFile.max_spend,
     });
-    console.log('buy onSell :>> ', upBuyAmount, resultTicker.ticker.last);
+    console.log('buy onSell :>> ', upBuyAmount, resultTicker.last);
   }
 }

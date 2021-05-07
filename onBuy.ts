@@ -1,5 +1,4 @@
-import { promises } from 'fs';
-import { cetUsdt, makerFee } from './config';
+import { makerFee } from './config';
 import { fileWrite } from './testingUtils';
 import { buy, defaultDataFileSell } from './utils';
 
@@ -9,12 +8,12 @@ export async function onBuy(
   minAmount: number,
   market: string,
 ) {
-  const price = Number(resultTicker.ticker.last);
+  const price = Number(resultTicker.last);
   await buy({
     amount: String(minAmount),
     market,
   });
-  await fileWrite(`${cetUsdt}-storage.json`, {
+  await fileWrite(`${market}-storage.json`, {
     ...defaultDataFileSell,
     price,
     profit: dataReadFile.profit,

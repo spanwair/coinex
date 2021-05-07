@@ -6,15 +6,12 @@ import { promises } from 'fs';
 import { onBuy } from './onBuy';
 import { onSell } from './onSell';
 import { fetchFile } from './testingUtils';
-import { cetUsdt, changePercent, minAmount } from './config';
+import { changePercent, coinsUsdt } from './config';
 const marketUrl = `/market/ticker?market=`;
 let currentBalance = {};
 
-async function fileRead() {
-  return await fetchFile(`${cetUsdt}-storage.json`);
-};
-
 async function init() {
+  await promises.writeFile('config.json', JSON.stringify({ start: new Date() }), 'utf8');
   await run();
 }
 
@@ -26,15 +23,22 @@ async function run() {
       currentBalance[currencyKey] = result[currencyKey];
     }
   }
-  const resultTicker: Ticker = await checkCurrentValue();
-  if (resultTicker) {
-    const dataReadFile = await fileRead();
-    if (dataReadFile.type === 'SELL') {
-      onSell(dataReadFile, resultTicker, changePercent, cetUsdt);
-    }
-    if (dataReadFile.type === 'BUY') {
-      console.log('resultTicker :>> ', resultTicker);
-      onBuy(dataReadFile, resultTicker, minAmount, cetUsdt);
+  const resultTickers = await checkCurrentValue();
+  if (resultTickers) {
+    const tickersKeys = Object.keys(resultTickers.ticker);
+    const chosenPairKeys: { name: string, amount: number }[] = Object.keys(coinsUsdt).map(key => coinsUsdt[key]);
+    for (const pairName of tickersKeys) {
+      const foundChosenPair = chosenPairKeys.find(chosen => chosen.name === pairName);
+      if (foundChosenPair) {
+        const resultTicker = resultTickers.ticker[pairName];
+        const dataReadFile = await fetchFile(`${pairName}-storage.json`);
+        if (dataReadFile.type === 'SELL') {
+          onSell(dataReadFile, resultTicker, changePercent, pairName);
+        }
+        if (dataReadFile.type === 'BUY') {
+          onBuy(dataReadFile, resultTicker, foundChosenPair.amount, pairName);
+        }
+      }
     }
   }
   // await sell({
@@ -44,10 +48,10 @@ async function run() {
   goToNextRound();
 }
 
-async function checkCurrentValue(): Promise<Ticker | undefined> {
+async function checkCurrentValue(): Promise<{[key: string]: Ticker} | undefined> {
   let result;
   try {
-    result = await client.getNoAuth(`${marketUrl}${cetUsdt}`);
+    result = await client.getNoAuth('/market/ticker/all');
   } catch (error) {
     console.log('error :>> ', error);
   }
@@ -60,7 +64,7 @@ async function checkCurrentValue(): Promise<Ticker | undefined> {
 function goToNextRound() {
   setTimeout(() => {
     run();
-  }, 6000);
+  }, 15000);
 }
 
 init();
