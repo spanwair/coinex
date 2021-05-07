@@ -1,0 +1,24 @@
+{
+  "name": "coinex",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node index.ts -- ",
+    "count": "ts-node count.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/node": "^15.0.0",
+    "@types/superagent": "^4.1.10"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "querystring": "^0.2.1",
+    "superagent": "^6.1.0"
+  }
+}
