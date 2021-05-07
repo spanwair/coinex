@@ -21,4 +21,4 @@ function deleteRecursively(dir, pattern) {
   }
 }
 
-deleteRecursively('.', /\.json$/);
+deleteRecursively('.', /\-storage.json$/);

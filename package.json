@@ -6,6 +6,7 @@
   "scripts": {
     "start": "ts-node index.ts -- ",
     "count": "ts-node count.ts",
+    "delete": "ts-node deleteJsonFiles.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
